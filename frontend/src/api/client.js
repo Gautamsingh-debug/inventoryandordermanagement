@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const rawBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+let rawBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+if (rawBaseUrl.includes('railway.app') && rawBaseUrl.startsWith('http://')) {
+  rawBaseUrl = rawBaseUrl.replace('http://', 'https://');
+}
 const API_BASE_URL = rawBaseUrl.replace(/\/+$/, '');
 
 const client = axios.create({
