@@ -1,0 +1,13 @@
+.sku-code {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.8rem;
+  color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.1);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.text-money {
+  font-weight: 600;
+  color: var(--text-primary);
+}
