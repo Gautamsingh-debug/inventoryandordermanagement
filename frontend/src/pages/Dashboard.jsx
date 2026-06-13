@@ -1,25 +1,36 @@
+import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Package, Users, ShoppingCart, AlertTriangle } from 'lucide-react';
 import useProducts from '../hooks/useProducts';
 import useCustomers from '../hooks/useCustomers';
 import useOrders from '../hooks/useOrders';
 import DataTable from '../components/DataTable/DataTable';
 import StatusBadge from '../components/StatusBadge/StatusBadge';
+import OrderDetailModal from '../components/OrderDetailModal/OrderDetailModal';
 import './Dashboard.css';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const [detailOrder, setDetailOrder] = useState(null);
   const { products, loading: pLoading } = useProducts();
   const { customers, loading: cLoading } = useCustomers();
   const { orders, loading: oLoading } = useOrders();
+
+  const productMap = useMemo(() => {
+    const map = {};
+    products.forEach((p) => { map[p.id] = p; });
+    return map;
+  }, [products]);
 
   const loading = pLoading || cLoading || oLoading;
   const lowStock = products.filter((p) => p.is_active && p.stock_quantity < 10);
   const recentOrders = [...orders].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 5);
 
   const stats = [
-    { icon: Package, label: 'Total Products', value: products.filter(p => p.is_active).length, color: 'indigo' },
-    { icon: Users, label: 'Total Customers', value: customers.length, color: 'emerald' },
-    { icon: ShoppingCart, label: 'Total Orders', value: orders.length, color: 'amber' },
-    { icon: AlertTriangle, label: 'Low Stock Items', value: lowStock.length, color: 'rose' },
+    { icon: Package, label: 'Total Products', value: products.filter(p => p.is_active).length, color: 'indigo', path: '/products' },
+    { icon: Users, label: 'Total Customers', value: customers.length, color: 'emerald', path: '/customers' },
+    { icon: ShoppingCart, label: 'Total Orders', value: orders.length, color: 'amber', path: '/orders' },
+    { icon: AlertTriangle, label: 'Low Stock Items', value: lowStock.length, color: 'rose', path: '/products' },
   ];
 
   const orderColumns = [
@@ -75,12 +86,16 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-4 dashboard-stats">
         {stats.map((stat) => (
-          <div key={stat.label} className="stat-card">
+          <div 
+            key={stat.label} 
+            className="stat-card stat-card-clickable" 
+            onClick={() => navigate(stat.path)}
+          >
             <div className={`stat-card-icon ${stat.color}`}>
               <stat.icon size={22} />
             </div>
             <div className="stat-card-value">
-              {loading ? <div className="skeleton" style={{ width: 48, height: 28 }} /> : stat.value}
+              {loading ? <div className="skeleton" /> : stat.value}
             </div>
             <div className="stat-card-label">{stat.label}</div>
           </div>
@@ -97,6 +112,7 @@ const Dashboard = () => {
             data={recentOrders}
             loading={oLoading}
             emptyMessage="No orders yet"
+            onRowClick={(row) => setDetailOrder(row)}
           />
         </div>
 
@@ -109,9 +125,16 @@ const Dashboard = () => {
             data={lowStock}
             loading={pLoading}
             emptyMessage="All products are well-stocked"
+            onRowClick={() => navigate('/products')}
           />
         </div>
       </div>
+
+      <OrderDetailModal 
+        detailOrder={detailOrder} 
+        onClose={() => setDetailOrder(null)} 
+        productMap={productMap} 
+      />
     </div>
   );
 };

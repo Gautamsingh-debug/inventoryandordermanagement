@@ -128,7 +128,13 @@ const Customers = () => {
         </div>
       </div>
 
-      <DataTable columns={columns} data={filtered} loading={loading} emptyMessage="No customers found" />
+      <DataTable 
+        columns={columns} 
+        data={filtered} 
+        loading={loading} 
+        emptyMessage="No customers found" 
+        onRowClick={(row) => openEdit(row)}
+      />
 
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editing ? 'Edit Customer' : 'Add Customer'}>
         <form onSubmit={handleSubmit}>

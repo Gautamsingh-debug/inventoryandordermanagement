@@ -150,7 +150,13 @@ const Products = () => {
         </div>
       </div>
 
-      <DataTable columns={columns} data={filtered} loading={loading} emptyMessage="No products found" />
+      <DataTable 
+        columns={columns} 
+        data={filtered} 
+        loading={loading} 
+        emptyMessage="No products found" 
+        onRowClick={(row) => openEdit(row)}
+      />
 
       {/* Add / Edit Modal */}
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editing ? 'Edit Product' : 'Add Product'}>
