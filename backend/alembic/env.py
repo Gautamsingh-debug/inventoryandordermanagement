@@ -19,7 +19,7 @@ from app.models import Base  # noqa: F401  — ensures all models are registered
 config = context.config
 
 # Override the sqlalchemy.url with the real DATABASE_URL from settings
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+config.set_main_option("sqlalchemy.url", settings.async_database_url)
 
 # Interpret the config file for Python logging
 if config.config_file_name is not None:

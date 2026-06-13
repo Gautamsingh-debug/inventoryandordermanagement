@@ -10,7 +10,7 @@ from .config import settings
 from .models import Base  # noqa: F401 – imported so Alembic can see all metadata
 
 engine = create_async_engine(
-    settings.DATABASE_URL,
+    settings.async_database_url,
     echo=settings.DEBUG,
     future=True,
     pool_pre_ping=True,
