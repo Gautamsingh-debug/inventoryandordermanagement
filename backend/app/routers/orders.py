@@ -42,7 +42,7 @@ def _order_to_read(order) -> OrderRead:
     )
 
 
-@router.get("/", response_model=list[OrderRead])
+@router.get("", response_model=list[OrderRead])
 async def list_orders(
     skip: int = Query(0, ge=0, description="Number of records to skip"),
     limit: int = Query(20, ge=1, le=100, description="Max records to return"),
@@ -63,7 +63,7 @@ async def get_order(
     return _order_to_read(order)
 
 
-@router.post("/", response_model=OrderRead, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=OrderRead, status_code=status.HTTP_201_CREATED)
 async def create_order(
     data: OrderCreate,
     session: AsyncSession = Depends(get_db),

@@ -14,7 +14,7 @@ from app.services import product_service
 router = APIRouter(prefix="/api/products", tags=["Products"])
 
 
-@router.get("/", response_model=list[ProductRead])
+@router.get("", response_model=list[ProductRead])
 async def list_products(
     skip: int = Query(0, ge=0, description="Number of records to skip"),
     limit: int = Query(20, ge=1, le=100, description="Max records to return"),
@@ -38,7 +38,7 @@ async def get_product(
     return ProductRead.model_validate(product)
 
 
-@router.post("/", response_model=ProductRead, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=ProductRead, status_code=status.HTTP_201_CREATED)
 async def create_product(
     data: ProductCreate,
     session: AsyncSession = Depends(get_db),

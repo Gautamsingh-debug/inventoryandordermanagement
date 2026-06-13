@@ -14,7 +14,7 @@ from app.services import customer_service
 router = APIRouter(prefix="/api/customers", tags=["Customers"])
 
 
-@router.get("/", response_model=list[CustomerRead])
+@router.get("", response_model=list[CustomerRead])
 async def list_customers(
     skip: int = Query(0, ge=0, description="Number of records to skip"),
     limit: int = Query(20, ge=1, le=100, description="Max records to return"),
@@ -37,7 +37,7 @@ async def get_customer(
     return CustomerRead.model_validate(customer)
 
 
-@router.post("/", response_model=CustomerRead, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=CustomerRead, status_code=status.HTTP_201_CREATED)
 async def create_customer(
     data: CustomerCreate,
     session: AsyncSession = Depends(get_db),
