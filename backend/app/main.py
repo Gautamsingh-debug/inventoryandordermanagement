@@ -14,14 +14,14 @@ from app.routers.orders import router as orders_router
 from app.routers.products import router as products_router
 
 
+from app.database import engine, Base
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    """Application lifespan context manager.
-
-    Use this to run startup / shutdown logic (e.g. connection pools,
-    background tasks) without the deprecated ``on_event`` decorator.
-    """
+    """Application lifespan context manager."""
     # --- Startup ---
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
     yield
     # --- Shutdown ---
 
